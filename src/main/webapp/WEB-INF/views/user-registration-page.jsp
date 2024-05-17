@@ -25,6 +25,9 @@
 		<div align="center">
 			<laabe>User: </laabe>
 			<form:input path="name" />
+			<form:errors path="name" cssClass="error" />
+
+
 			<br /> <br />
 
 			<laabe>userName: </laabe>
@@ -59,8 +62,8 @@
 
 			<label>Age: </label>
 			<form:input path="age" />
-			<form:errors path="age" cssClass="error"/>
-			
+			<form:errors path="age" cssClass="error" />
+
 			<div align="center">
 				<h3>Communication</h3>
 				<label>Email</label>

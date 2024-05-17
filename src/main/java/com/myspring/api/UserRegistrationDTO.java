@@ -2,8 +2,11 @@ package com.myspring.api;
 
 import com.myspring.annotation.Age;
 
-public class UserRegistrationDTO {
+import jakarta.validation.constraints.NotEmpty;
 
+public class UserRegistrationDTO {
+	
+	@NotEmpty(message ="the name must not be empty")
 	private String     name;
 	private String     userName;
 	private  char[]    password;

@@ -2,9 +2,12 @@ package com.myspring.controller;
 
 import java.util.List;
 
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -34,20 +37,10 @@ public class RegistrationController {
 	@RequestMapping("/register")
 	public String register(@Valid @ModelAttribute("registerDTO") UserRegistrationDTO dto, BindingResult result)
 	{
-		System.out.println(dto.getCountry());
-		System.out.println(dto.getGender());
-		System.out.println(dto.getName());
-		System.out.println(dto.getPassword());
-		System.out.println(dto.getUserName());
-		System.out.println(dto.getAge());
-		System.out.println(dto.getContact().getEmail());
-		// here where the formetter.parse get called
-		System.out.println(dto.getContact().getPhone());
 		
 		if (result.hasErrors())
 		{
 			System.out.println("my page has error");
-			
 			List<ObjectError>  allError = result.getAllErrors();
 			for(ObjectError error : allError)
 			{
@@ -55,12 +48,22 @@ public class RegistrationController {
 			}
 			
 			return "user-registration-page";
-
 		}
-		
-		return "reigster-success";
-
-		
+		return "reigster-success";		
+	}
+	
+	// this method will called before the controller because it will control the binding property
+	// it will allow my to play with request properties
+	@InitBinder
+	public void initBinder(WebDataBinder binder)
+	{
+		System.out.println("Hello from binder ....");
+		// here we will prevent the userRegisterationDTO to bind the name property value
+		// that mean the binder will exclude the name property from the binding process
+		binder.setDisallowedFields("userName");
+		// in this case if the user enter the whitespace the binder will trime it to not trick the system
+		StringTrimmerEditor stringEditor = new StringTrimmerEditor(true);
+		binder.registerCustomEditor(String.class, "name", stringEditor);
 	}
 		
 }
