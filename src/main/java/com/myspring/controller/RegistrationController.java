@@ -1,7 +1,10 @@
 package com.myspring.controller;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -11,9 +14,11 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.myspring.annotation.EmailValidator;
 import com.myspring.api.ContactDTO;
 import com.myspring.api.Phone;
 import com.myspring.api.UserRegistrationDTO;
+import com.myspring.propertyEditor.myNamePropertyEditor;
 
 import jakarta.validation.Valid;
 
@@ -38,6 +43,9 @@ public class RegistrationController {
 	public String register(@Valid @ModelAttribute("registerDTO") UserRegistrationDTO dto, BindingResult result)
 	{
 		
+		// this one way to call our validator or to call it in initBinding method
+		EmailValidator emailVal = new EmailValidator();
+		emailVal.validate(dto, result);
 		if (result.hasErrors())
 		{
 			System.out.println("my page has error");
@@ -61,9 +69,22 @@ public class RegistrationController {
 		// here we will prevent the userRegisterationDTO to bind the name property value
 		// that mean the binder will exclude the name property from the binding process
 		binder.setDisallowedFields("userName");
-		// in this case if the user enter the whitespace the binder will trime it to not trick the system
+		// in this case if the user enter the whitespace the binder will trim it to not trick the system
 		StringTrimmerEditor stringEditor = new StringTrimmerEditor(true);
 		binder.registerCustomEditor(String.class, "name", stringEditor);
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+		CustomDateEditor dateEditor= new CustomDateEditor(dateFormat, true);
+		binder.registerCustomEditor(Date.class, "date", dateEditor);
+		
+		
+		// use our private binding class
+		myNamePropertyEditor myNameEditor = new myNamePropertyEditor();
+		binder.registerCustomEditor(String.class,"name", myNameEditor);
+		
+		// register the email validator
+		binder.addValidators(new EmailValidator());
+				
 	}
 		
 }

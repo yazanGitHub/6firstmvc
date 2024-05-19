@@ -23,19 +23,23 @@
 	<form:form action="register" modelAttribute="registerDTO">
 
 		<div align="center">
-			<laabe>User: </laabe>
+			<label>User: </label>
 			<form:input path="name" />
 			<form:errors path="name" cssClass="error" />
 
 
 			<br /> <br />
 
-			<laabe>userName: </laabe>
+			<label>userName: </label>
 			<form:input path="userName" />
 			<br /> <br />
 
-			<laabe>Password: </laabe>
+			<label>Password: </label>
 			<form:password path="password" />
+			<br /> <br />
+
+			<label>Date: </label>
+			<form:input path="date"  type="date"/>
 			<br /> <br />
 
 			<laabe>Country: </laabe>
@@ -68,6 +72,8 @@
 				<h3>Communication</h3>
 				<label>Email</label>
 				<form:input path="contact.email" />
+				<form:errors path="contact.email" cssClass="error"/>
+				<br /> <br /> 
 				<label>Phone</label>
 				<form:input path="contact.phone" />
 			</div>
